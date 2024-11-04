@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:hong_kong_geo_helper/CustomIcon.dart';
 
-class MyHomePage extends StatelessWidget{
-  final String homeTitle;
+class TestingPage extends StatelessWidget{
+  final String hometitle;
 
-  const MyHomePage({super.key, required this.homeTitle});
+  const TestingPage({super.key, required this.hometitle});
 
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      appBar: AppBar(title: Text(homeTitle),),
+      appBar: AppBar(title: Text(hometitle),),
       body: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text('Hello World'),
         ],
       ),
       drawer: Drawer(
         child: ListView(
-          padding: const EdgeInsets.all(0),
-          children: <Widget>[
+        children: <Widget>[
             const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
