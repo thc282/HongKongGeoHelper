@@ -32,9 +32,9 @@ class ScaffoldScreen extends StatefulWidget {
 }
 
 class _ScaffoldScreenState extends State<ScaffoldScreen> {
-  PageEnum _currentPage = PageEnum.home;
+  PageConfigEnum _currentPage = PageConfigEnum.lamppost;
 
-  void _onPageSelected(PageEnum page){
+  void _onPageSelected(PageConfigEnum page){
     setState((){
       _currentPage = page;
     });
@@ -42,32 +42,30 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentConfig = PageConfigs.configs[_currentPage]!;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(currentConfig.title),
+        title: Text(_currentPage.title),
         actions: _buildAppBarActions(),
       ),
       drawer: AppDrawer(
         onPageSelected: _onPageSelected,
         currentPage: _currentPage,
       ),
-      body: currentConfig.page,
+      body: _currentPage.page,
       floatingActionButton: _buildFloatingActionButton(),
     );
   }
 
   List<Widget> _buildAppBarActions(){
     switch(_currentPage){
-      case PageEnum.home:
+      case PageConfigEnum.home:
         return [
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: (){ /*search*/ },
           ),
         ];
-      case PageEnum.lamppost:
+      case PageConfigEnum.lamppost:
         return [
           IconButton(
             icon: const Icon(Icons.add),
@@ -81,12 +79,12 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> {
 
   Widget? _buildFloatingActionButton(){
     switch(_currentPage){
-      case PageEnum.home:
+      case PageConfigEnum.home:
         return FloatingActionButton(
           onPressed: (){/*add*/},
           child: const Icon(Icons.question_mark),
         );
-      case PageEnum.lamppost:
+      case PageConfigEnum.lamppost:
         return FloatingActionButton(
           onPressed: (){/*add*/},
           child: const Icon(Icons.arrow_circle_right),

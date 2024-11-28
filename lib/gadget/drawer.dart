@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../assets/page_config.dart';
 
 class AppDrawer extends StatelessWidget {
-  final Function(PageEnum) onPageSelected;
-  final PageEnum currentPage;
+  final Function(PageConfigEnum) onPageSelected;
+  final PageConfigEnum currentPage;
 
   const AppDrawer({
     super.key,
@@ -38,11 +38,10 @@ class AppDrawer extends StatelessWidget {
                 ],
               )
             ),
-            ...PageConfigs.configs.entries.map(
+            ...PageConfigEnum.values.map(
               (entry) => _buildDrawerItem(
                 context,
-                entry.key,
-                entry.value,
+                entry,
               )
             )
           ],
@@ -52,15 +51,14 @@ class AppDrawer extends StatelessWidget {
 
   Widget _buildDrawerItem(
     BuildContext context,
-    PageEnum pageEnum,
-    PageConfig pageConfig,  
+    PageConfigEnum page,
   ){
     return ListTile(
-      leading: Icon(pageConfig.icon),
-      title: Text(pageConfig.title),
+      leading: Icon(page.icon),
+      title: Text(page.title),
       onTap: () {
-        if(pageEnum != currentPage){
-          onPageSelected(pageEnum);
+        if(page != currentPage){
+          onPageSelected(page);
         }
         Navigator.pop(context);
       },
