@@ -56,6 +56,7 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> {
     );
   }
 
+  //build the app bar actions
   List<Widget> _buildAppBarActions(){
     switch(_currentPage){
       case PageConfigEnum.home:
@@ -77,6 +78,7 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> {
     }
   }
 
+  //build the floating action button
   Widget? _buildFloatingActionButton(){
     switch(_currentPage){
       case PageConfigEnum.home:
