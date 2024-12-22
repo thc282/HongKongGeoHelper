@@ -3,6 +3,7 @@ import 'package:hong_kong_geo_helper/assets/api2model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../assets/page_config.dart';
+import '../assets/API_config.dart';
 
 class LamppostPage extends StatefulWidget {
   const LamppostPage({super.key});
@@ -17,18 +18,6 @@ class _LamppostPageState extends State<LamppostPage> {
     TextEditingController(),
   ];
   String selectedType = "noSelect";
-  static const String API_URL = "https://api.csdi.gov.hk/apim/dataquery/api/?id=hyd_rcd_1629267205229_84645&layer=lamppost&limit=10&offset=0&Lamp_Post_Number=";
-  late Future<LamppostInfo> futureLamppostInfo;
-  //call api
-  Future<LamppostInfo> fetchLamppostInfo() async {
-    final res = await http.get(Uri.parse(API_URL + _textControllers[0].text));
-
-    if(res.statusCode == 200){
-      return LamppostInfo.fromJson(jsonDecode(res.body));
-    } else {
-      throw Exception('Failed to load lamppost info');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,8 +85,13 @@ class _LamppostPageState extends State<LamppostPage> {
             ),
             onPressed: () async{
               try{
-                final result = await fetchLamppostInfo();
-                print(result);
+                final result = await ApiService.fetchData(
+                  endpoint: ApiEndpoint.lamppost,
+                  params: {
+                    'Lamp_Post_Number': _textControllers[0].text,
+                  },
+                );
+                print(result.$2);
               } catch(e){
                 print(e);
               }
