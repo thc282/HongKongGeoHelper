@@ -5,17 +5,24 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Text(
-          'Welcome to Hong Kong Geo Helper',
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-        const SizedBox(height: 20),
-        // Add more page content
-      ],
+    return _buildHomeTab(context);
+  }
+
+  Widget _buildHomeTab(context){
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            'Welcome to Hong Kong Geo Helper',
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          const SizedBox(height: 20),
+          // Add more page content
+        ],
+      ),
     );
   }
 }

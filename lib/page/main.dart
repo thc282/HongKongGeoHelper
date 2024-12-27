@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:hong_kong_geo_helper/page/LamppostPage.dart';
+import 'package:provider/provider.dart';
 
 import '../assets/page_config.dart';
 import '../gadget/drawer.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(
+  ChangeNotifierProvider(
+    create: (_) => SearchResultProvider(),
+    child: const MyApp(),
+  )
+);
 
 class MyApp extends StatelessWidget {
   final appTitle = 'Hong Kong Geo Helper';
@@ -31,12 +38,33 @@ class ScaffoldScreen extends StatefulWidget {
   _ScaffoldScreenState createState() => _ScaffoldScreenState();
 }
 
-class _ScaffoldScreenState extends State<ScaffoldScreen> {
+class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStateMixin {
   PageConfigEnum _currentPage = PageConfigEnum.lamppost;
+  late TabController _tabController;
+
+  @override
+  void initState(){
+    super.initState();
+    _tabController = TabController(
+      length: _currentPage.tabs.length,
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose(){
+    _tabController.dispose();
+    super.dispose();
+  }
 
   void _onPageSelected(PageConfigEnum page){
     setState((){
       _currentPage = page;
+      _tabController.dispose();
+      _tabController = TabController(
+        length: _currentPage.tabs.length,
+        vsync: this,
+      );
     });
   }
 
@@ -46,15 +74,41 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> {
       appBar: AppBar(
         title: Text(_currentPage.title),
         actions: _buildAppBarActions(),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: _currentPage.tabs.map((tab) => Tab(text: tab)).toList(),
+        ),
       ),
       drawer: AppDrawer(
         onPageSelected: _onPageSelected,
         currentPage: _currentPage,
       ),
-      body: _currentPage.page,
+      body: TabBarView(
+        controller: _tabController,
+        children: [..._currentPage.page],
+      ),
       floatingActionButton: _buildFloatingActionButton(),
     );
   }
+
+  //build the tab views
+  /*List<Widget> _buildTabViews(){
+    switch(_currentPage){
+      case PageConfigEnum.home:
+        return [
+          [const HomePage()];
+        ];
+      case PageConfigEnum.lamppost:
+        return [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: (){ /*add*/ },
+          ),
+        ];
+      default:
+        return [];
+    }
+  }*/
 
   //build the app bar actions
   List<Widget> _buildAppBarActions(){

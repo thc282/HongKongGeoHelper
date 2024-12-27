@@ -4,19 +4,31 @@ import '../page/HomePage.dart';
 import '../page/LamppostPage.dart';
 
 enum PageConfigEnum{
-  home(title: 'Hong Kong Geo Helper', icon: Icons.home, page: HomePage()),
-  lamppost(title: '路燈查詢', icon: CustomIcon.lamp_street, page: LamppostPage());
+  home(
+    title: 'Hong Kong Geo Helper',
+    icon: Icons.home,
+    page: [HomePage()],
+    tabs: ['home']
+  ),
+  lamppost(
+    title: '路燈查詢',
+    icon: CustomIcon.lamp_street,
+    page: [SearchTab(), ResultTab()],
+    tabs: ['Search', 'Result']
+  );
   //add others
 
   const PageConfigEnum({
     required this.title,
     required this.icon,
     required this.page,
+    required this.tabs,
   });
 
   final String title;
   final IconData icon;
-  final Widget page;
+  final List<Widget> page;
+  final List<String> tabs;
 }
 
 enum TransportDropdown{
