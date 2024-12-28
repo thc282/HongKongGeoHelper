@@ -156,7 +156,14 @@ class ResultTab extends StatelessWidget {
       child: Consumer<SearchResultProvider>(
         builder: (context, provider, child) {
           final searchResult = provider.searchResult as LamppostInfo;
-          debugPrint('searchResult: ${searchResult.timeStamp}');
+          //feature is list of lamppost info
+          final features = searchResult.features[0];
+          final geometry = features.geometry;
+          final properties = features.properties;
+
+          final dateAndTime = searchResult.timeStamp.split("T");
+          final date = dateAndTime[0]; // "YYYY-MM-DD"
+          final time = dateAndTime[1].replaceAll("Z",""); // "HH:MM:SS"
           
           return searchResult == null
               ? const Center(child: Text('沒有搜尋結果'))
@@ -169,32 +176,19 @@ class ResultTab extends StatelessWidget {
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
                       const SizedBox(height: 20),
-                      //_buildInfoRow('數據獲取時點:', searchResult['timeStamp']),
-                      _buildInfoRow('地理座標:', '[114.0271112,\n22.42246901]'),
+                      _buildInfoRow('數據獲取時點:', '$date\n$time'),
+                      _buildInfoRow('地理座標:', '[${geometry.coordinates[0]},\n${geometry.coordinates[1]}]'),
                       const SizedBox(height: 10),
                       Text('位置參數',
-                          style: Theme.of(context).textTheme.titleMedium),
-                      const SizedBox(height: 10),
-                      _buildInfoRow('OBJECTID:', '538873'),
-                      _buildInfoRow('港柱編號:', 'AD5321'),
-                      _buildInfoRow('經度:', '114.0271112'),
-                      _buildInfoRow('緯度:', '22.42246901'),
-                      _buildInfoRow('地區:', 'Yuen Long'),
-                      _buildInfoRow('位置:', 'SHUI TSIU SAN\nTSUEN ROAD'),
-                      const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ElevatedButton(
-                            onPressed: () {},
-                            child: const Text('查詢'),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {},
-                            child: const Text('位置資料'),
-                          ),
-                        ],
+                          style: Theme.of(context).textTheme.titleMedium
                       ),
+                      const SizedBox(height: 10),
+                      _buildInfoRow('OBJECTID:', properties.OBJECTID),
+                      _buildInfoRow('港柱編號:', properties.Lamp_Post_Number),
+                      _buildInfoRow('經度:', properties.Longitude),
+                      _buildInfoRow('緯度:', properties.Latitude),
+                      _buildInfoRow('地區:', properties.District),
+                      _buildInfoRow('位置:', properties.Location),
                     ],
                   ),
                );
@@ -204,7 +198,7 @@ class ResultTab extends StatelessWidget {
   }
 }
 
-Widget _buildInfoRow(String label, String value) {
+Widget _buildInfoRow(String label, dynamic value) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 4),
     child: Row(
@@ -222,7 +216,7 @@ Widget _buildInfoRow(String label, String value) {
         ),
         Expanded(
           child: Text(
-            value,
+            value.toString(),
             style: const TextStyle(
               color: Colors.black,
               fontSize: 14,
