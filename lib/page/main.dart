@@ -49,6 +49,10 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStat
       length: _currentPage.tabs.length,
       vsync: this,
     );
+    // 使用 addPostFrameCallback 確保 context 已完全初始化
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SearchResultProvider.of(context).updateTabController(_tabController);
+    });
   }
 
   @override
@@ -65,6 +69,7 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStat
         length: _currentPage.tabs.length,
         vsync: this,
       );
+      SearchResultProvider.of(context).updateTabController(_tabController);
     });
   }
 
