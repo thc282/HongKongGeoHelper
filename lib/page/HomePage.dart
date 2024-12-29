@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../assets/page_config.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage( {super.key} );
@@ -13,13 +14,16 @@ class HomePage extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Welcome to Hong Kong Geo Helper',
+            PageConfigEnum.home.descriptions[0]['main']!,
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 20),
+          Text(
+            PageConfigEnum.home.descriptions[0]['tips']!,
+          ),
           // Add more page content
         ],
       ),

@@ -8,13 +8,31 @@ enum PageConfigEnum{
     title: 'Hong Kong Geo Helper',
     icon: Icons.home,
     page: [HomePage()],
-    tabs: ['home']
+    tabs: ['home'],
+    descriptions: [
+      {
+        'main': 'Welcome to Hong Kong Geo Helper',
+        'sub': '首頁次要說明',
+        'tips': 'This is an APP for you to find the geo information around your position. You can search for lampposts, traffic cameras, and more.',
+      }
+    ],
   ),
   lamppost(
     title: '路燈查詢',
     icon: CustomIcon.lamp_street,
     page: [SearchTab(), ResultTab()],
-    tabs: ['Search', 'Result']
+    tabs: ['Search', 'Result'],
+    descriptions: [
+      {
+        'usage': '如何搜尋路燈',
+        'format': '輸入格式說明',
+        'example': '搜尋示例'
+      },
+      {
+        'interpret': '結果解讀說明',
+        'notice': '注意事項'
+      }
+    ],
   );
   //add others
 
@@ -23,12 +41,14 @@ enum PageConfigEnum{
     required this.icon,
     required this.page,
     required this.tabs,
+    required this.descriptions,
   });
 
   final String title;
   final IconData icon;
   final List<Widget> page;
   final List<String> tabs;
+  final List<Map<String, String>> descriptions;
 }
 
 enum TransportDropdown{

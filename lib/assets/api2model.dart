@@ -18,7 +18,8 @@ class LamppostInfo{
   factory LamppostInfo.fromJson(Map<String, dynamic> json){
     return LamppostInfo(
       timeStamp: json['timeStamp'],
-      features: (json['features'] as List).map((feature) => Feature.fromJson(feature)).toList(),
+      //features: (json['features'] as List).map((feature) => Feature.fromJson(feature)).toList(),
+      features: [...json['features']].map((feature) => Feature.fromJson(feature)).toList(),
       numberReturned: json['numberReturned'],
       type: json['type'],
       numberMatched: json['numberMatched'],

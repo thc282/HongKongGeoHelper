@@ -96,25 +96,6 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStat
     );
   }
 
-  //build the tab views
-  /*List<Widget> _buildTabViews(){
-    switch(_currentPage){
-      case PageConfigEnum.home:
-        return [
-          [const HomePage()];
-        ];
-      case PageConfigEnum.lamppost:
-        return [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: (){ /*add*/ },
-          ),
-        ];
-      default:
-        return [];
-    }
-  }*/
-
   //build the app bar actions
   List<Widget> _buildAppBarActions(){
     switch(_currentPage){
