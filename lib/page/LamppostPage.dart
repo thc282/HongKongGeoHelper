@@ -1,7 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:hong_kong_geo_helper/assets/api2model.dart';
+import 'package:hong_kong_geo_helper/gadget/buildmarker.dart';
+import 'package:hong_kong_geo_helper/mics/tile_provider.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import '../assets/page_config.dart';
@@ -118,7 +122,6 @@ class _SearchTabState extends State<SearchTab> {
               ),*/
               const SizedBox(height: 50),
               ElevatedButton(
-                child: Text("Go search"),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).primaryColorLight,
                   shape: RoundedRectangleBorder(
@@ -149,7 +152,8 @@ class _SearchTabState extends State<SearchTab> {
                       _isLoading = false;
                     });
                   }
-                }
+                },
+                child: const Text("Go search")
               )
               // 添加更多頁面內容
             ],
@@ -173,60 +177,88 @@ class ResultTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Consumer<SearchResultProvider>(
-        builder: (context, provider, child) {
-          final searchResult = provider.searchResult;
-          
-          // Handle null or invalid search result
-          if (searchResult == null) {
-            return const Center(child: Text('沒有搜尋結果'));
-          }
-
-          // Now we know searchResult is not null, we can safely cast it
-          final lamppostInfo = searchResult as LamppostInfo;
-          if (lamppostInfo.features.isEmpty) {
-            return const Center(child: Text('找不到相關資料'));
-          }
-
-          final features = lamppostInfo.features[0];
-          final geometry = features.geometry;
-          final properties = features.properties;
-
-          final dateAndTime = lamppostInfo.timeStamp.split("T");
-          final date = dateAndTime[0]; // "YYYY-MM-DD"
-          final time = dateAndTime[1].replaceAll("Z",""); // "HH:MM:SS"
-          
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Consumer<SearchResultProvider>(
+      builder: (context, provider, child) {
+        final searchResult = provider.searchResult;
+        
+        // Handle null or invalid search result
+        if (searchResult == null) {
+          return const Center(child: Text('沒有搜尋結果'));
+        }
+    
+        // Now we know searchResult is not null, we can safely cast it
+        final lamppostInfo = searchResult as LamppostInfo;
+        if (lamppostInfo.features.isEmpty) {
+          return const Center(child: Text('找不到相關資料'));
+        }
+    
+        final features = lamppostInfo.features;
+        final geometry = features[0].geometry;
+        //final properties = features.properties;
+    
+        final dateAndTime = lamppostInfo.timeStamp.split("T");
+        /*final date = dateAndTime[0]; // "YYYY-MM-DD"
+        final time = dateAndTime[1].replaceAll("Z",""); // "HH:MM:SS"*/
+        
+        return Stack(
+          children: [
+            FlutterMap(
+              options: MapOptions(
+                initialCenter: LatLng(geometry.coordinates[1], geometry.coordinates[0]),
+                initialZoom: 16.0,
+              ),
               children: [
-                Text(
-                  '位置資料',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(height: 20),
-                BuildRow('數據獲取時點:', '$date\n$time'),
-                BuildRow('地理座標:', '[${geometry.coordinates[0]},\n${geometry.coordinates[1]}]'),
-                const SizedBox(height: 10),
-                Text('位置參數',
-                    style: Theme.of(context).textTheme.titleMedium
-                ),
-                const SizedBox(height: 10),
-                BuildRow('OBJECTID:', properties.OBJECTID),
-                BuildRow('港柱編號:', properties.Lamp_Post_Number),
-                BuildRow('經度:', properties.Longitude),
-                BuildRow('緯度:', properties.Latitude),
-                BuildRow('地區:', properties.District),
-                BuildRow('位置:', properties.Location),
+                openStreetMapTileLayer,
+                MapPinLayer(features)
               ],
-            ),
-          );
-        },
-      ),
+            )
+          ],
+        );
+        /*return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '位置資料',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const SizedBox(height: 20),
+              BuildRow('數據獲取時點:', '$date\n$time'),
+              BuildRow('地理座標:', '[${geometry.coordinates[0]},\n${geometry.coordinates[1]}]'),
+              const SizedBox(height: 10),
+              Text('位置參數',
+                  style: Theme.of(context).textTheme.titleMedium
+              ),
+              const SizedBox(height: 10),
+              BuildRow('OBJECTID:', properties.OBJECTID),
+              BuildRow('港柱編號:', properties.Lamp_Post_Number),
+              BuildRow('經度:', properties.Longitude),
+              BuildRow('緯度:', properties.Latitude),
+              BuildRow('地區:', properties.District),
+              BuildRow('位置:', properties.Location),
+            ],
+          ),
+        );*/
+      },
     );
   }
+
+  Marker buildPin(BuildContext context, LatLng point) => 
+    Marker(
+      point: point,
+      width: 60,
+      height: 60,
+      child: GestureDetector(
+        onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Tapped existing marker'),
+            duration: Duration(seconds: 1),
+            showCloseIcon: true,
+          ),
+        ),
+        child: const Icon(Icons.location_pin, size: 60, color: Colors.black),
+      ),
+    );
 }
 
 class SearchResultProvider extends ChangeNotifier {
