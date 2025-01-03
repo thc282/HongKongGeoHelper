@@ -13,12 +13,10 @@ class MapTab extends StatelessWidget {
   }
 
   Widget _buildMapTab(context){
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Stack(
+    return Stack(
         children: [
           FlutterMap(
-            options: MapOptions(
+            options: const MapOptions(
               initialCenter: LatLng(22.3193, 114.1694),
               initialZoom: 11.0,
             ),
@@ -27,7 +25,6 @@ class MapTab extends StatelessWidget {
             ],
           )
         ],
-      ),
-    );
+      );
   }
 }

@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 enum ApiEndpoint {
   lamppost(
+    baseUrl:  'https://api.csdi.gov.hk/apim/dataquery/api/',
     path: '',
     defaultParams: {
       'id': 'hyd_rcd_1629267205229_84645',
@@ -11,25 +12,32 @@ enum ApiEndpoint {
       'offset': '0',
     }
   ),
-  traffic(
-    path: 'traffic',
+  webService(
+    baseUrl:  'https://portal.csdi.gov.hk/server/services/common/landsd_rcd_1648571595120_89752/MapServer/',
+    path: 'WFSServer',
     defaultParams: {
-      'layer': 'traffic'
+      'service': 'WFS',
+      'version': '2.0.0',
+      'request': 'GetFeature',
+      'typeNames': 'GEO_PLACE_NAME',
+      'outputFormat': 'GeoJSON',
+      'srsName': 'EPSG:4326',
+      'count': '100',
     }
   );
 
   const ApiEndpoint({
+    required this.baseUrl,
     required this.path,
     this.defaultParams = const {},
   });
 
+  final String baseUrl;
   final String path;
   final Map<String, String> defaultParams;
 }
 
 class ApiService {
-  static const String baseUrl = 'https://api.csdi.gov.hk/apim/dataquery/api/';
-  
   static Future<(int, String)> fetchData({
     required ApiEndpoint endpoint,
     String method = 'GET',
@@ -40,7 +48,7 @@ class ApiService {
       final queryParams = Map<String, String>.from(endpoint.defaultParams)
         ..addAll(params);
       
-      final uri = Uri.parse('$baseUrl${endpoint.path}')
+      final uri = Uri.parse('${endpoint.baseUrl}${endpoint.path}')
           .replace(queryParameters: queryParams);
 
       late http.Response response;

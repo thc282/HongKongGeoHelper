@@ -17,12 +17,12 @@ class HomePage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            PageConfigEnum.home.descriptions[0]['main']!,
+            PageConfigEnum.home.descriptions['main']!,
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           const SizedBox(height: 20),
           Text(
-            PageConfigEnum.home.descriptions[0]['tips']!,
+            PageConfigEnum.home.descriptions['tips']!,
           ),
           // Add more page content
         ],

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:hong_kong_geo_helper/assets/CustomIcon.dart';
 import 'package:hong_kong_geo_helper/assets/api2model.dart';
 import 'package:hong_kong_geo_helper/gadget/buildmarker.dart';
 import 'package:hong_kong_geo_helper/mics/tile_provider.dart';
@@ -80,17 +81,18 @@ class _SearchTabState extends State<SearchTab> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '路燈編號',
+                PageConfigEnum.lamppost.title,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 20),
               TextFormField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
-                  labelText: '輸入路燈編號',
+                  labelText: PageConfigEnum.lamppost.descriptions['inputlabel'],
                 ),
                 controller: _textControllers[0],
                 textCapitalization: TextCapitalization.characters,
+                onChanged: (value) => SearchResultProvider.of(context).updateSearchText(value),
               ),
               /*const SizedBox(height: 50),
               Text(
@@ -145,7 +147,7 @@ class _SearchTabState extends State<SearchTab> {
                     provider.tabController?.animateTo(1);
                   } catch(e){
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('搜尋時發生錯誤')),
+                      SnackBar(content: Text(PageConfigEnum.lamppost.descriptions['fetchError']!)),
                     );
                   } finally {
                     setState(() {
@@ -153,7 +155,7 @@ class _SearchTabState extends State<SearchTab> {
                     });
                   }
                 },
-                child: const Text("Go search")
+                child: Text(PageConfigEnum.lamppost.descriptions['search']!),
               )
               // 添加更多頁面內容
             ],
@@ -183,20 +185,20 @@ class ResultTab extends StatelessWidget {
         
         // Handle null or invalid search result
         if (searchResult == null) {
-          return const Center(child: Text('沒有搜尋結果'));
+          return Center(child: Text(PageConfigEnum.lamppost.descriptions['noresult']!));
         }
     
         // Now we know searchResult is not null, we can safely cast it
         final lamppostInfo = searchResult as LamppostInfo;
         if (lamppostInfo.features.isEmpty) {
-          return const Center(child: Text('找不到相關資料'));
+          return Center(child: Text(PageConfigEnum.lamppost.descriptions['nolamppost']!));
         }
     
         final features = lamppostInfo.features;
         final geometry = features[0].geometry;
         //final properties = features.properties;
     
-        final dateAndTime = lamppostInfo.timeStamp.split("T");
+        //final dateAndTime = lamppostInfo.timeStamp.split("T");
         /*final date = dateAndTime[0]; // "YYYY-MM-DD"
         final time = dateAndTime[1].replaceAll("Z",""); // "HH:MM:SS"*/
         
@@ -209,7 +211,11 @@ class ResultTab extends StatelessWidget {
               ),
               children: [
                 openStreetMapTileLayer,
-                MapPinLayer(features)
+                MapPinLayer(
+                  features,
+                  CustomIcon.lamp_street,
+                  (feature) => _openLamppostMarker(context, feature.geometry.coordinates, feature.properties),
+                )
               ],
             )
           ],
@@ -243,33 +249,66 @@ class ResultTab extends StatelessWidget {
     );
   }
 
-  Marker buildPin(BuildContext context, LatLng point) => 
-    Marker(
-      point: point,
-      width: 60,
-      height: 60,
-      child: GestureDetector(
-        onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Tapped existing marker'),
-            duration: Duration(seconds: 1),
-            showCloseIcon: true,
-          ),
+    void _openLamppostMarker(
+    BuildContext context,
+    List<double> coor,
+    DynamicProperties properties
+  ){
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${properties.Lamp_Post_Number} Info',
+              style: const TextStyle(fontSize: 24,fontWeight: FontWeight.bold,)
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: ListView(
+                children: [
+                  _buildCard('Lamp Post Number', properties.Lamp_Post_Number),
+                  _buildCard('Latitude', properties.Latitude),
+                  _buildCard('Longitude', properties.Longitude),
+                  _buildCard('District', properties.District),
+                  _buildCard('Location', properties.Location),
+                ],
+              )
+            )
+          ],
         ),
-        child: const Icon(Icons.location_pin, size: 60, color: Colors.black),
       ),
     );
+  }
+
+  Widget _buildCard(String title, dynamic value){
+    return Card(
+      child: ListTile(
+        title: Text(title),
+        subtitle: Text(value.toString()),
+      ),
+    );
+  }
 }
 
 class SearchResultProvider extends ChangeNotifier {
   dynamic _searchResult;
+  String? _searchText;
   TabController? _tabController;
 
   dynamic get searchResult => _searchResult;
+  String? get searchText => _searchText;
   TabController? get tabController => _tabController;
 
   void updateSearchResult(dynamic result) {
     _searchResult = result;
+    notifyListeners();
+  }
+
+  void updateSearchText(String text) {
+    _searchText = text;
     notifyListeners();
   }
 

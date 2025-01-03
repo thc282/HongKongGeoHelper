@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hong_kong_geo_helper/page/LamppostPage.dart';
 import 'package:provider/provider.dart';
 
+import '../assets/API_config.dart';
+import '../assets/api2model.dart';
 import '../assets/page_config.dart';
 import '../gadget/drawer.dart';
 
@@ -73,6 +77,7 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStat
     });
   }
 
+  //main scaffold widget
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,7 +101,7 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStat
     );
   }
 
-  //build the app bar actions
+  //build the app bar actions (upper right corner)
   List<Widget> _buildAppBarActions(){
     switch(_currentPage){
       case PageConfigEnum.home:
@@ -118,7 +123,7 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStat
     }
   }
 
-  //build the floating action button
+  //build the floating action button (lower right corner)
   Widget? _buildFloatingActionButton(){
     switch(_currentPage){
       case PageConfigEnum.home:
@@ -128,8 +133,9 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStat
         );
       case PageConfigEnum.lamppost:
         return FloatingActionButton(
-          onPressed: (){/*add*/},
-          child: const Icon(Icons.arrow_circle_right),
+          onPressed: () {
+        },
+          child: const Icon(Icons.question_mark),
         );
       default:
         return null;
