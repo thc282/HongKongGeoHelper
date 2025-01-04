@@ -1,17 +1,17 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:hong_kong_geo_helper/page/LamppostPage.dart';
+import 'package:hong_kong_geo_helper/mics/LampSearchProvider.dart';
+import 'package:hong_kong_geo_helper/mics/LocationSearchProvider.dart';
 import 'package:provider/provider.dart';
 
-import '../assets/API_config.dart';
-import '../assets/api2model.dart';
-import '../assets/page_config.dart';
-import '../gadget/drawer.dart';
+import 'package:hong_kong_geo_helper/assets/page_config.dart';
+import 'package:hong_kong_geo_helper/gadget/drawer.dart';
 
 void main() => runApp(
-  ChangeNotifierProvider(
-    create: (_) => SearchResultProvider(),
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => LampSearchProvider(),),
+      ChangeNotifierProvider(create: (_) => LocationSearchProvider(),),
+    ],
     child: const MyApp(),
   )
 );
@@ -39,11 +39,11 @@ class ScaffoldScreen extends StatefulWidget {
   const ScaffoldScreen({ super.key });
 
   @override
-  _ScaffoldScreenState createState() => _ScaffoldScreenState();
+  State<ScaffoldScreen> createState() => _ScaffoldScreenState();
 }
 
 class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStateMixin {
-  PageConfigEnum _currentPage = PageConfigEnum.lamppost;
+  PageConfigEnum _currentPage = PageConfigEnum.locationSearch;
   late TabController _tabController;
 
   @override
@@ -54,9 +54,9 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStat
       vsync: this,
     );
     // 使用 addPostFrameCallback 確保 context 已完全初始化
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      SearchResultProvider.of(context).updateTabController(_tabController);
-    });
+    /*WidgetsBinding.instance.addPostFrameCallback((_) {
+      LampSearchProvider.of(context).updateTabController(_tabController);
+    });*/
   }
 
   @override
@@ -73,7 +73,7 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStat
         length: _currentPage.tabs.length,
         vsync: this,
       );
-      SearchResultProvider.of(context).updateTabController(_tabController);
+      //LampSearchProvider.of(context).updateTabController(_tabController);
     });
   }
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hong_kong_geo_helper/assets/CustomIcon.dart';
 import '../page/HomePage.dart';
 import '../page/LamppostPage.dart';
-import '../page/MapPage.dart';
+import '../page/LocationSearchPage.dart';
 
 enum PageConfigEnum{
   home(
@@ -21,7 +21,7 @@ enum PageConfigEnum{
   lamppost(
     title: '路燈查詢',
     icon: CustomIcon.lamp_street,
-    page: [SearchTab(), ResultTab()],
+    page: [LampSearchTab(), LampResultTab()],
     tabs: ['Search', 'Result'],
     descriptions: 
     {
@@ -32,16 +32,14 @@ enum PageConfigEnum{
       'search': '搜尋',
     },
   ),
-  map(
-    title: '地圖',
+  locationSearch(
+    title: '地點查詢',
     icon: Icons.map,
-    page: [MapTab()],
-    tabs: ['Map'],
+    page: [LocationSearchTab()],
+    tabs: [''],
     descriptions: 
     {
-      'main': '地圖功能',
-      'sub': '地圖次要說明',
-      'tips': 'This is a map page for you to find the geo information around your position. You can search for lampposts, traffic cameras, and more.',
+      
     }
   );
   //add others

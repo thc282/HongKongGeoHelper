@@ -18,7 +18,6 @@ class LamppostInfo{
   factory LamppostInfo.fromJson(Map<String, dynamic> json){
     return LamppostInfo(
       timeStamp: json['timeStamp'],
-      //features: (json['features'] as List).map((feature) => Feature.fromJson(feature)).toList(),
       features: [...json['features']].map((feature) => Feature.fromJson(feature)).toList(),
       numberReturned: json['numberReturned'],
       type: json['type'],
@@ -136,4 +135,32 @@ class DynamicProperties {
   
   @override
   String toString() => _data.toString();
+}
+
+/* ==============================================
+  * 以下為LocationSearch的API資料模型
+  * ==============================================
+  */
+class LocationSearchInfo {
+  final Map<String, dynamic> _data;
+
+  LocationSearchInfo(this._data);
+
+  factory LocationSearchInfo.fromJson(Map<String, dynamic> json) {
+    return LocationSearchInfo(json);
+  }
+
+  dynamic operator [](String key) => _data[key];
+
+  bool hasKey(String key) => _data.containsKey(key);
+
+  // 為常用屬性提供getter
+  String get addressZH => _data['addressZH'];
+  String get nameZH => _data['nameZH'];
+  String get districtZH => _data['districtZH'];
+  int get x => _data['x'];
+  int get y => _data['y'];
+  String get nameEN => _data['nameEN'];
+  String get addressEN => _data['addressEN'];
+  String get districtEN => _data['districtEN'];
 }

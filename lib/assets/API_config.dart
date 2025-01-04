@@ -24,6 +24,13 @@ enum ApiEndpoint {
       'srsName': 'EPSG:4326',
       'count': '100',
     }
+  ),
+  locationSearch(
+    baseUrl: 'https://geodata.gov.hk/gs/api/v1.0.0/',
+    path: 'locationSearch',
+    defaultParams: {
+      'q': '',
+    }
   );
 
   const ApiEndpoint({

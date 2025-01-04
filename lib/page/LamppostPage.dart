@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:hong_kong_geo_helper/assets/CustomIcon.dart';
@@ -9,10 +7,9 @@ import 'package:hong_kong_geo_helper/mics/tile_provider.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
-import '../assets/page_config.dart';
-import '../assets/API_config.dart';
-
-import '../gadget/buildrow.dart';
+import 'package:hong_kong_geo_helper/assets/page_config.dart';
+import 'package:hong_kong_geo_helper/assets/API_config.dart';
+import 'package:hong_kong_geo_helper/mics/LampSearchProvider.dart';
 
 
 // LamppostPage Container
@@ -45,16 +42,16 @@ class _LamppostPageState extends State<LamppostPage> {
 }*/
 
 // SearchTab
-class SearchTab extends StatefulWidget {
-  const SearchTab({
+class LampSearchTab extends StatefulWidget {
+  const LampSearchTab({
     super.key,
   });
 
   @override
-  State<SearchTab> createState() => _SearchTabState();
+  State<LampSearchTab> createState() => _LampSearchTabState();
 }
 
-class _SearchTabState extends State<SearchTab> {
+class _LampSearchTabState extends State<LampSearchTab> {
   final List<TextEditingController> _textControllers = [
     TextEditingController(),
     TextEditingController(),
@@ -92,7 +89,7 @@ class _SearchTabState extends State<SearchTab> {
                 ),
                 controller: _textControllers[0],
                 textCapitalization: TextCapitalization.characters,
-                onChanged: (value) => SearchResultProvider.of(context).updateSearchText(value),
+                onChanged: (value) => LampSearchProvider.of(context).updateSearchText(value),
               ),
               /*const SizedBox(height: 50),
               Text(
@@ -142,7 +139,7 @@ class _SearchTabState extends State<SearchTab> {
                       },
                     );
                     //write the result to the provider
-                    final provider = SearchResultProvider.of(context);
+                    final provider = LampSearchProvider.of(context);
                     provider.updateSearchResult(LamppostInfo.fromJson(jsonDecode(result.$2)));
                     provider.tabController?.animateTo(1);
                   } catch(e){
@@ -174,12 +171,12 @@ class _SearchTabState extends State<SearchTab> {
 }
 
 // ResultTab
-class ResultTab extends StatelessWidget {
-  const ResultTab({super.key,});
+class LampResultTab extends StatelessWidget {
+  const LampResultTab({super.key,});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SearchResultProvider>(
+    return Consumer<LampSearchProvider>(
       builder: (context, provider, child) {
         final searchResult = provider.searchResult;
         
@@ -290,34 +287,5 @@ class ResultTab extends StatelessWidget {
         subtitle: Text(value.toString()),
       ),
     );
-  }
-}
-
-class SearchResultProvider extends ChangeNotifier {
-  dynamic _searchResult;
-  String? _searchText;
-  TabController? _tabController;
-
-  dynamic get searchResult => _searchResult;
-  String? get searchText => _searchText;
-  TabController? get tabController => _tabController;
-
-  void updateSearchResult(dynamic result) {
-    _searchResult = result;
-    notifyListeners();
-  }
-
-  void updateSearchText(String text) {
-    _searchText = text;
-    notifyListeners();
-  }
-
-  void updateTabController(TabController controller) {
-    _tabController = controller;
-    notifyListeners();
-  }
-
-  static SearchResultProvider of(BuildContext context) {
-    return Provider.of<SearchResultProvider>(context, listen: false);
   }
 }
