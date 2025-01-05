@@ -22,7 +22,7 @@ class LocationSearchProvider extends ChangeNotifier {
     try {
       _isLoading = true;
       _errorMessage = null;
-      notifyListeners();
+      //notifyListeners();
 
       final (statusCode, responseBody) =
       await ApiService.fetchData(

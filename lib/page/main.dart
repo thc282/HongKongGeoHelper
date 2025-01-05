@@ -73,7 +73,7 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStat
         length: _currentPage.tabs.length,
         vsync: this,
       );
-      //LampSearchProvider.of(context).updateTabController(_tabController);
+      LampSearchProvider.of(context).updateTabController(_tabController);
     });
   }
 

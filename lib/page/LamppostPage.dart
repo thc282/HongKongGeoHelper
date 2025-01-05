@@ -246,7 +246,7 @@ class LampResultTab extends StatelessWidget {
     );
   }
 
-    void _openLamppostMarker(
+  void _openLamppostMarker(
     BuildContext context,
     List<double> coor,
     DynamicProperties properties
