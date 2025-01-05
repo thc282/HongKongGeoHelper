@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:hong_kong_geo_helper/assets/geolocator.dart';
-import 'package:hong_kong_geo_helper/gadget/buildmarker.dart';
+import 'package:hong_kong_geo_helper/gadget/MarkerControl.dart';
 import 'package:hong_kong_geo_helper/mics/LocationSearchProvider.dart';
 import 'package:hong_kong_geo_helper/mics/tile_provider.dart';
 import 'package:latlong2/latlong.dart';
@@ -15,20 +15,26 @@ class LocationSearchTab extends StatefulWidget {
   State<LocationSearchTab> createState() => _LocationSearchTabState();
 }
 
-class _LocationSearchTabState extends State<LocationSearchTab>{
-
-  late Iterable<Widget> _lastOptions = <Widget>[];
+class _LocationSearchTabState extends State<LocationSearchTab> with TickerProviderStateMixin {
+  final mapController = MapController();
 
   @override
   Widget build(BuildContext context){
     return Stack(
       children: [
         FlutterMap(
+          mapController: mapController,
           options: const MapOptions(
             initialCenter: LatLng(22.3193, 114.1694),
           ),
           children: [
             openStreetMapTileLayer,
+            LocationMarkerLayer(
+              Icons.location_on,
+              (feature) {   //when point is tapped
+
+              }
+            )
           ],
         ),
         _buildSearchBar(context)
@@ -54,8 +60,10 @@ class _LocationSearchTabState extends State<LocationSearchTab>{
         //_searchController.closeView(text);
       }
       // execute search
-      await LocationSearchProvider.of(context).fetchSearchResult(text);
+      final provider = LocationSearchProvider.of(context);
+      final result = await provider.fetchSearchResult(text);
       // update search result
+      provider.updateSearchResult(result);
       final query = _searchController.text;
       _searchController.text = '';
       _searchController.text = query;
@@ -74,7 +82,7 @@ class _LocationSearchTabState extends State<LocationSearchTab>{
             onSubmitted: _onSubmitted,
             padding: const WidgetStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16)),
             leading: const Icon(Icons.search),
-            onTap: () => controller.openView,
+            onTap: () => controller.openView(),
           );
         }, suggestionsBuilder: (context, controller) {
           final provider = LocationSearchProvider.of(context);
@@ -117,10 +125,11 @@ class _LocationSearchTabState extends State<LocationSearchTab>{
               title: Text(result.nameZH),
               subtitle: Text(result.addressZH),
               trailing: Text(result.districtZH),
-              onTap: () {
+              onTap: () {   //when a suggestion is tapped
                 controller.closeView(result.nameZH);
-                // 處理選擇邏輯，例如更新地圖位置
-                // 可以使用 result.x 和 result.y 來定位
+                // goto location
+                var (lat, lon) = HK80Converter.gridToLatLon(result.y, result.x);
+                _animatedMapMove(LatLng(lat, lon), 17.0);
               },
             );
           }).toList();
@@ -128,6 +137,68 @@ class _LocationSearchTabState extends State<LocationSearchTab>{
         },
       )
     );
+  }
+
+  /*=================================
+   * Animation Controller
+   * =================================
+   */
+  static const _startedId = 'AnimatedMapController#MoveStarted';
+  static const _inProgressId = 'AnimatedMapController#MoveInProgress';
+  static const _finishedId = 'AnimatedMapController#MoveFinished';
+
+  void _animatedMapMove(LatLng destLocation, double destZoom) {
+    // Create some tweens. These serve to split up the transition from one location to another.
+    // In our case, we want to split the transition be<tween> our current map center and the destination.
+    final camera = mapController.camera;
+    final latTween = Tween<double>(
+        begin: camera.center.latitude, end: destLocation.latitude);
+    final lngTween = Tween<double>(
+        begin: camera.center.longitude, end: destLocation.longitude);
+    final zoomTween = Tween<double>(begin: camera.zoom, end: destZoom);
+
+    // Create a animation controller that has a duration and a TickerProvider.
+    final controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+    // The animation determines what path the animation will take. You can try different Curves values, although I found
+    // fastOutSlowIn to be my favorite.
+    final Animation<double> animation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+
+    // Note this method of encoding the target destination is a workaround.
+    // When proper animated movement is supported (see #1263) we should be able
+    // to detect an appropriate animated movement event which contains the
+    // target zoom/center.
+    final startIdWithTarget =
+        '$_startedId#${destLocation.latitude},${destLocation.longitude},$destZoom';
+    bool hasTriggeredMove = false;
+
+    controller.addListener(() {
+      final String id;
+      if (animation.value == 1.0) {
+        id = _finishedId;
+      } else if (!hasTriggeredMove) {
+        id = startIdWithTarget;
+      } else {
+        id = _inProgressId;
+      }
+
+      hasTriggeredMove |= mapController.move(
+        LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
+        zoomTween.evaluate(animation),
+        id: id,
+      );
+    });
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.dispose();
+      } else if (status == AnimationStatus.dismissed) {
+        controller.dispose();
+      }
+    });
+
+    controller.forward();
   }
 }
 

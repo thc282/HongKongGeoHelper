@@ -158,9 +158,12 @@ class LocationSearchInfo {
   String get addressZH => _data['addressZH'];
   String get nameZH => _data['nameZH'];
   String get districtZH => _data['districtZH'];
-  int get x => _data['x'];
-  int get y => _data['y'];
+  double get x => _data['x'];
+  double get y => _data['y'];
   String get nameEN => _data['nameEN'];
   String get addressEN => _data['addressEN'];
   String get districtEN => _data['districtEN'];
+
+  @override
+  String toString() => _data.toString();
 }
