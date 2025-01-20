@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:hong_kong_geo_helper/assets/CustomIcon.dart';
+import 'package:hong_kong_geo_helper/page/LocationIdentityPage.dart';
 import '../page/HomePage.dart';
 import '../page/LamppostPage.dart';
 import '../page/LocationSearchPage.dart';
@@ -41,7 +42,17 @@ enum PageConfigEnum{
     {
       
     }
-  );
+  ),
+  locationIdentify(
+    title: '地點識別',
+    icon: Icons.location_on,
+    page: [LocationIdentityTab()],
+    tabs: [''],
+    descriptions: 
+    {
+      
+    }
+  ),;
   //add others
 
   const PageConfigEnum({

@@ -1,5 +1,8 @@
 import 'dart:core';
 
+import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
+
 class LamppostInfo{
   final String timeStamp;
   final List<Feature> features;
@@ -34,7 +37,7 @@ class LamppostInfo{
 class Feature{
   final Geometry geometry;
   final String type;
-  final DynamicProperties properties;
+  final Properties properties;
 
   Feature({
     required this.geometry,
@@ -46,7 +49,7 @@ class Feature{
     return Feature(
       geometry: Geometry.fromJson(json['geometry']),
       type: json['type'],
-      properties: DynamicProperties.fromJson(json['properties']),
+      properties: Properties.fromJson(json['properties']),
     );
   }
 
@@ -78,47 +81,13 @@ class Geometry{
   }
 }
 
-class Properties{
-  final int OBJECTID;
-  final dynamic Lamp_Post_Number;
-  final double Latitude;
-  final String District;
-  final double Longitude;
-  final String Location;
-
-  Properties({
-    required this.OBJECTID,
-    required this.Lamp_Post_Number,
-    required this.Latitude,
-    required this.District,
-    required this.Longitude,
-    required this.Location,
-  });
-
-  factory Properties.fromJson(Map<String, dynamic> json){
-    return Properties(
-      OBJECTID: json['OBJECTID'],
-      Lamp_Post_Number: json['Lamp_Post_Number'],
-      Latitude: json['Latitude'],
-      District: json['District'],
-      Longitude: json['Longitude'],
-      Location: json['Location'],
-    );
-  }
-
-  @override
-  String toString(){
-    return 'OBJECTID: $OBJECTID, Lamp_Post_Number: $Lamp_Post_Number, Latitude: $Latitude, District: $District, Longitude: $Longitude, Location: $Location';
-  }
-}
-
-class DynamicProperties {
+class Properties {
   final Map<String, dynamic> _data;
   
-  DynamicProperties(this._data);
+  Properties(this._data);
   
-  factory DynamicProperties.fromJson(Map<String, dynamic> json) {
-    return DynamicProperties(json);
+  factory Properties.fromJson(Map<String, dynamic> json) {
+    return Properties(json);
   }
   
   dynamic operator [](String key) => _data[key];
@@ -166,4 +135,116 @@ class LocationSearchInfo {
 
   @override
   String toString() => _data.toString();
+}
+
+
+/* ==============================================
+  * 以下為LocationIdentify的API資料模型
+  * ==============================================
+  */
+class LocationIdentifyInfo {
+  final Map<String, dynamic> _data;
+
+  LocationIdentifyInfo(this._data);
+
+  factory LocationIdentifyInfo.fromJson(Map<String, dynamic> json) {
+    return LocationIdentifyInfo(json);
+  }
+
+  dynamic operator [](String key) => _data[key];
+
+  bool hasKey(String key) => _data.containsKey(key);
+
+  // 為常用屬性提供getter
+  List<IdentifyResultInfo> get results => [..._data['results'].map((result) => IdentifyResultInfo.fromJson(result))];
+
+  @override
+  String toString() => _data.toString();
+}
+
+class IdentifyResultInfo{
+  final Map<String, dynamic> _data;
+
+  IdentifyResultInfo(this._data);
+
+  factory IdentifyResultInfo.fromJson(Map<String, dynamic> json){
+    return IdentifyResultInfo(json);
+  }
+
+  dynamic operator [](String key) => _data[key];
+
+  bool hasKey(String key) => _data.containsKey(key);
+
+  // 為常用屬性提供getter
+  List<IdentifyAddressInfo> get addressInfo => [..._data['addressInfo'].map((address) => IdentifyAddressInfo.fromJson(address))];
+  String get eheader => _data['eheader'];
+  String get type => _data['type'];
+  String get cheader => _data['cheader'];
+}
+
+class IdentifyAddressInfo{
+  final Map<String, dynamic> _data;
+
+  IdentifyAddressInfo(this._data);
+
+  factory IdentifyAddressInfo.fromJson(Map<String, dynamic> json){
+    return IdentifyAddressInfo(json);
+  }
+
+  dynamic operator [](String key) => _data[key];
+
+  bool hasKey(String key) => _data.containsKey(key);
+
+  // 為常用屬性提供getter
+  String get eaddress => _data['eaddress'];
+  String get addressType => _data['addressType'];
+  String get cname => _data['cname'];
+  String get otherCname => _data['otherCname'];
+  double get roofLevel => _data['roofLevel'];
+  String get bdcsuid => _data['bdcsuid'];
+  String get ename => _data['ename'];
+  String get otherEname => _data['otherEname'];
+  double get x => _data['x'];
+  String get nameStatus => _data['nameStatus'];
+  double get y => _data['y'];
+  String get caddress => _data['caddress'];
+  double get baseLevel => _data['baseLevel'];
+  List<IdentifyAddressInfo> get facility => [..._data['facility'].map((facility) => IdentifyAddressInfo.fromJson(facility))];
+  String get uniqueId => _data['uniqueId'];
+  List<Hashtag> get hashtag => [..._data['hashtag'].map((hashtag) => Hashtag.fromJson(hashtag))];
+
+  //inner addressInfo (extra)
+  int get zoomLevel => _data['zoomLevel'];
+  dynamic get distance => _data['distance'];
+  dynamic get polyGeometry => _data['polyGeometry'];
+  dynamic get eextrainfoArray => _data['eextrainfoArray'];
+  dynamic get photos => _data['photos'];
+  dynamic get einfo => _data['einfo'];
+  Map<String, String> get eextrainfo => _data['eextrainfo'];
+  dynamic get group => _data['group'];
+  String get faciType => _data['faciType'];
+  Map<String, String> get cextrainfo => _data['cextrainfo'];
+  dynamic get cextrainfoArray => _data['cextrainfoArray'];
+  dynamic get cinfo => _data['cinfo'];
+}
+
+class Hashtag{
+  final Map<String, dynamic> _data;
+
+  Hashtag(this._data);
+
+  factory Hashtag.fromJson(Map<String, dynamic> json){
+    return Hashtag(json);
+  }
+
+  dynamic operator [](String key) => _data[key];
+
+  bool hasKey(String key) => _data.containsKey(key);
+
+  // 為常用屬性提供getter
+  String get edisplay => _data['edisplay'];
+  String get cdisplay => _data['cdisplay'];
+  String get addressType => _data['addressType'];
+  String get tagType => _data['tagType'];
+  String get id => _data['id'];
 }

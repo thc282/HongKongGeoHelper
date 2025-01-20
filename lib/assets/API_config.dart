@@ -31,6 +31,15 @@ enum ApiEndpoint {
     defaultParams: {
       'q': '',
     }
+  ),
+  locationIdentify(
+    baseUrl: 'https://geodata.gov.hk/gs/api/v1.0.0/',
+    path: '/identify',
+    defaultParams: {
+      'x': '',
+      'y': '',
+      'lang': 'zh',
+    }
   );
 
   const ApiEndpoint({

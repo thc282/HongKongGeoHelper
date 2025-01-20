@@ -118,7 +118,7 @@ Widget _buildLandInfoCard(context, LocationSearchInfo properties, LatLng point){
     height: MediaQuery.of(context).size.height * 0.2,
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.blue),
+        color: Colors.black54),
     child: Expanded(
       child: ListView(
         children: [

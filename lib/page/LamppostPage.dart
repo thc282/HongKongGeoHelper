@@ -249,7 +249,7 @@ class LampResultTab extends StatelessWidget {
   void _openLamppostMarker(
     BuildContext context,
     List<double> coor,
-    DynamicProperties properties
+    Properties properties
   ){
     showModalBottomSheet(
       context: context,

@@ -35,6 +35,7 @@ class _LocationSearchTabState extends State<LocationSearchTab> with TickerProvid
             ),
             children: [
               openStreetMapTileLayer,
+              openStreetMapLabelTileLayer,
               markerClusterLayer(_popupController),
             ],
           ),

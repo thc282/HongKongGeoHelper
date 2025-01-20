@@ -43,7 +43,7 @@ class ScaffoldScreen extends StatefulWidget {
 }
 
 class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStateMixin {
-  PageConfigEnum _currentPage = PageConfigEnum.locationSearch;
+  PageConfigEnum _currentPage = PageConfigEnum.locationIdentify;
   late TabController _tabController;
 
   @override
