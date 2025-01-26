@@ -16,6 +16,7 @@ class LocationIdentityTab extends StatefulWidget {
 class _LocationIdentityTabState extends State<LocationIdentityTab> {
   final mapController = MapController();
   final _popupController = PopupController();
+
   
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class _LocationIdentityTabState extends State<LocationIdentityTab> {
             children: [
               openStreetMapTileLayer,
               openStreetMapLabelTileLayer,
-              markerClusterLayer(_popupController),
+              //markerClusterLayer(_popupController),
             ],
           ),
         ),

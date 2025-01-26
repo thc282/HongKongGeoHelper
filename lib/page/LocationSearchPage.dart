@@ -20,6 +20,7 @@ class LocationSearchTab extends StatefulWidget {
 class _LocationSearchTabState extends State<LocationSearchTab> with TickerProviderStateMixin {
   final mapController = MapController();
   final _popupController = PopupController();
+  final _searchProvider = LocationSearchProvider();
 
   @override
   Widget build(BuildContext context){
@@ -36,7 +37,19 @@ class _LocationSearchTabState extends State<LocationSearchTab> with TickerProvid
             children: [
               openStreetMapTileLayer,
               openStreetMapLabelTileLayer,
-              markerClusterLayer(_popupController),
+              markerClusterLayer(_popupController, _searchProvider, 
+              (provider) => 
+                provider.searchResult.map((result) {
+                  var latlng = Converter.convert.gridToLatLng(Coordinate(x:result.x, y:result.y));
+                  return MarkerWithData(
+                    Marker(
+                      point: LatLng(latlng.lat, latlng.lng),
+                      child: const Icon(Icons.location_on, size: 20, color: Colors.red)
+                    ),
+                    result
+                  );
+                }).toList()
+              ),
             ],
           ),
         ),

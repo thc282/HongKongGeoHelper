@@ -40,29 +40,32 @@ class MapPinLayer extends StatelessWidget {
   }
 }
 
+class MarkerWithData {
+  final Marker marker;
+  final dynamic data;
+  
+  MarkerWithData(this.marker, this.data);
+}
+
 /*=========================
  *  Location Search Page
  * ========================
  */
-class markerClusterLayer extends StatelessWidget {
+class markerClusterLayer<T extends ChangeNotifier> extends StatelessWidget {
   final PopupController popupController;
+  final T provider;
+  final List<MarkerWithData> Function(T provider) markerBuilder;
   
-  const markerClusterLayer(this.popupController, {super.key});
+  const markerClusterLayer(this.popupController, this.provider, this.markerBuilder, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    List<Marker> markers = [];
-    late LocationSearchInfo onSelectedMarker;
+    List<MarkerWithData> markersWithData = [];
+    late dynamic onSelectedMarker;
 
-    return Consumer<LocationSearchProvider>(
+    return Consumer<T>(
       builder: (context, provider, child){
-        markers = provider.searchResult.map((result) {
-          var latlng = Converter.convert.gridToLatLng(Coordinate(x:result.x, y:result.y));
-          return Marker(
-            point: LatLng(latlng.lat, latlng.lng),
-            child: const Icon(Icons.location_on, size: 20, color: Colors.red)
-          );
-        }).toList();
+        markersWithData = markerBuilder(provider);
         return MarkerClusterLayerWidget(
           options: MarkerClusterLayerOptions(
             maxClusterRadius: 45,
@@ -71,15 +74,11 @@ class markerClusterLayer extends StatelessWidget {
             padding: const EdgeInsets.all(50),
             maxZoom: 15,
             disableClusteringAtZoom: 17,
-            markers: markers,
+            markers: markersWithData.map((m) => m.marker).toList(),
             onMarkerTap: (_onSelectedMarker){
-              onSelectedMarker = 
-              provider.searchResult.firstWhere(
-                (element) {
-                  var latlng = Converter.convert.gridToLatLng(Coordinate(x:element.x, y:element.y));
-                  return LatLng(latlng.lat, latlng.lng) == _onSelectedMarker.point;
-                }
-              );
+              onSelectedMarker = markersWithData.firstWhere(
+                (m) => m.marker == _onSelectedMarker
+              ).data;
             },
             builder: (context, markers) {
               return Container(
@@ -112,27 +111,25 @@ class markerClusterLayer extends StatelessWidget {
   }
 }
 
-Widget _buildLandInfoCard(context, LocationSearchInfo properties, LatLng point){
+Widget _buildLandInfoCard(context, dynamic properties, LatLng point){
   return Container(
     width: MediaQuery.of(context).size.width * 0.8,
-    height: MediaQuery.of(context).size.height * 0.2,
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Colors.black54),
-    child: Expanded(
-      child: ListView(
-        children: [
-          _buildCard('地址', properties.addressZH),
-          _buildCard('建築名稱', properties.nameZH),
-          _buildCard('地區', properties.districtZH),
-          const Divider(),
-          _buildCard('Address', properties.addressEN),
-          _buildCard('Building Name', properties.nameEN),
-          _buildCard('District', properties.districtEN),
-          const Divider(),
-          _buildCard('座標', '${point.latitude}, ${point.longitude}'),
-        ],
-      )
+    child:  Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _buildCard('地址', properties.addressZH),
+        _buildCard('建築名稱', properties.nameZH),
+        _buildCard('地區', properties.districtZH),
+        const Divider(),
+        _buildCard('Address', properties.addressEN),
+        _buildCard('Building Name', properties.nameEN),
+        _buildCard('District', properties.districtEN),
+        const Divider(),
+        _buildCard('座標', '${point.latitude}, ${point.longitude}'),
+      ],
     )
   );
 }
