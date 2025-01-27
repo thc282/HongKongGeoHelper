@@ -8,7 +8,7 @@ class AnimationMove{
   static const _inProgressId = 'AnimatedMapController#MoveInProgress';
   static const _finishedId = 'AnimatedMapController#MoveFinished';
 
-  static void _animatedMapMove(LatLng destLocation, double destZoom, MapController mapController, TickerProvider parent) {
+  static void animatedMapMove(LatLng destLocation, double destZoom, MapController mapController, TickerProvider parent) {
     // Create some tweens. These serve to split up the transition from one location to another.
     // In our case, we want to split the transition be<tween> our current map center and the destination.
     final camera = mapController.camera;

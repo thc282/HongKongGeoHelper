@@ -117,7 +117,7 @@ Widget _buildLandInfoCard(context, dynamic properties, LatLng point){
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: Colors.black54),
-    child:  Column(
+    child:  (properties is LocationSearchInfo) ? Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildCard('地址', properties.addressZH),
@@ -130,7 +130,7 @@ Widget _buildLandInfoCard(context, dynamic properties, LatLng point){
         const Divider(),
         _buildCard('座標', '${point.latitude}, ${point.longitude}'),
       ],
-    )
+    ) : const Text('No data')
   );
 }
 
