@@ -41,10 +41,12 @@ dependencies:
   flutter_map_cancellable_tile_provider: ^3.0.2
   flutter_hkgrid80_wgs84_converter:
     git: 
-        url: https://github.com/thc282/flutter_hkgrid80_wgs84_converter.git
+        url: https://github.com/lowkahonn/flutter_hkgrid80_wgs84_converter.git
         ref: master
   geolocator: ^13.0.2
   flutter_map_marker_cluster: ^1.4.0
+  map_launcher: ^3.5.0
+  flutter_svg: ^2.0.17
 
 dev_dependencies:
   flutter_test:

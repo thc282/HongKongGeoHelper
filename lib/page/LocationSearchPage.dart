@@ -21,10 +21,10 @@ class LocationSearchTab extends StatefulWidget {
 class _LocationSearchTabState extends State<LocationSearchTab> with TickerProviderStateMixin {
   final mapController = MapController();
   final _popupController = PopupController();
-  final _searchProvider = LocationSearchProvider();
 
   @override
   Widget build(BuildContext context){
+    final searchProvider = LocationSearchProvider.of(context);
     return Stack(
       children: [
         PopupScope(
@@ -33,12 +33,13 @@ class _LocationSearchTabState extends State<LocationSearchTab> with TickerProvid
             mapController: mapController,
             options: MapOptions(
               onTap: (_,__) => _popupController.hideAllPopups(),
+              onLongPress: (_, latlng) => openMapSheet(context, latlng),
               initialCenter: const LatLng(22.3193, 114.1694),
             ),
             children: [
               openStreetMapTileLayer,
               openStreetMapLabelTileLayer,
-              markerClusterLayer(_popupController, _searchProvider, 
+              markerClusterLayer(_popupController, searchProvider, 
               (provider) => 
                 provider.searchResult.map((result) {
                   var latlng = Converter.convert.gridToLatLng(Coordinate(x:result.x, y:result.y));
@@ -60,43 +61,43 @@ class _LocationSearchTabState extends State<LocationSearchTab> with TickerProvid
   }
 
   Widget _buildSearchBar(context){
-    final _searchController = SearchController();
+    final searchController = SearchController();
 
     void _onTyped(String text) {
       // open search view when typing in search bar
-      if (!_searchController.isOpen) {
-        _searchController.openView();
+      if (!searchController.isOpen) {
+        searchController.openView();
       }
       // get typeahead recommendations
     }
 
-    void _onSubmitted(String text) async{
+    void onSubmitted(String text) async{
       // close search view after pressing enter or selecting a recommendation.
       // (in search bar as well as in search view)
-      if (_searchController.isOpen) {
+      if (searchController.isOpen) {
         //_searchController.closeView(text);
       }
       // execute search
       final provider = LocationSearchProvider.of(context);
-      final result = await provider.fetchSearchResult(text);
+      /*final result =*/ await provider.fetchSearchResult(text);
       // update search result
       //provider.updateSearchResult(result);
-      final query = _searchController.text;
-      _searchController.text = '';
-      _searchController.text = query;
+      final query = searchController.text;
+      searchController.text = '';
+      searchController.text = query;
     }
 
     return Container(
       padding: const EdgeInsets.all(16),
       child: SearchAnchor(
-        searchController: _searchController,
+        searchController: searchController,
         viewOnChanged: _onTyped,
-        viewOnSubmitted: _onSubmitted,
+        viewOnSubmitted: onSubmitted,
         builder: (context, controller) {
           return SearchBar(
             controller: controller,
             onChanged: _onTyped,
-            onSubmitted: _onSubmitted,
+            onSubmitted: onSubmitted,
             padding: const WidgetStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16)),
             leading: const Icon(Icons.search),
             onTap: () => controller.openView(),

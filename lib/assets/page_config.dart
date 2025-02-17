@@ -22,8 +22,8 @@ enum PageConfigEnum{
   lamppost(
     title: '路燈查詢',
     icon: CustomIcon.lamp_street,
-    page: [LampSearchTab(), LampResultTab()],
-    tabs: ['Search', 'Result'],
+    page: [LampSearchTab()],
+    tabs: ['Search'],
     descriptions: 
     {
       'inputlabel': '輸入路燈編號',

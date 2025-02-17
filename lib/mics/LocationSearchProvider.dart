@@ -55,7 +55,7 @@ class LocationSearchProvider extends ChangeNotifier {
     }
   }
   
-  void updateSearchResult(List<LocationSearchInfo> result) {
+  /*void updateSearchResult(List<LocationSearchInfo> result) {
     _searchResult = result;
     notifyListeners();
   }
@@ -68,7 +68,7 @@ class LocationSearchProvider extends ChangeNotifier {
   void updateTabController(TabController controller) {
     _tabController = controller;
     notifyListeners();
-  }
+  }*/
 
   static LocationSearchProvider of(BuildContext context) {
     return Provider.of<LocationSearchProvider>(context, listen: false);

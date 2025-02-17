@@ -43,7 +43,7 @@ class ScaffoldScreen extends StatefulWidget {
 }
 
 class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStateMixin {
-  PageConfigEnum _currentPage = PageConfigEnum.locationSearch;
+  PageConfigEnum _currentPage = PageConfigEnum.lamppost;
   late TabController _tabController;
 
   @override
@@ -73,7 +73,6 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStat
         length: _currentPage.tabs.length,
         vsync: this,
       );
-      LampSearchProvider.of(context).updateTabController(_tabController);
     });
   }
 
