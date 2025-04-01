@@ -2,30 +2,32 @@
 This application is developed by flutter
 
 ## Project Background
-The aim of this project is to create an Android app that provides users with the ability to search for locations based on various options. Currently, there are limited apps available with this functionality, and existing options often lack complete features, such as the inability to jump to the map view or the absence of comprehensive search options.
+The aim of this project is to create an Android app that provides users with the ability to search for locations based on various options.
 
 # App Content
-TODO
+<table>
+    <tr>
+        <td align="middle">Lamppost</td>
+        <td><img src="https://github.com/user-attachments/assets/5c90e074-943c-46c5-bd43-b5010d171922" height="500"></td>
+        <td><img src="https://github.com/user-attachments/assets/a6214b56-b7c9-4fac-9004-8f09aed7ac03" height="500"></td>
+    </tr>
+    <tr>
+        <td align="middle">Location<br>Search</td>
+        <td align="middle"><img src="https://github.com/user-attachments/assets/c110d96d-c890-4e57-8abb-54c4d70efb4b" height="500"></td>
+        <td><img src="https://github.com/user-attachments/assets/d0ac2c49-4364-43ef-9fb4-06ef64f4ee2e" height="500"></td>
+    </tr>
+    <tr>
+        <td align="middle">Identify<br>Search</td>
+        <td align="middle"><img src="https://github.com/user-attachments/assets/3357187e-ce1f-4b56-b756-fbadeda188c7" height="500"></td>
+        <td><img src="https://github.com/user-attachments/assets/cd13cf90-05ce-4c1f-ae97-48a7c5dcbac2" height="500"></td>
+    </tr>
+</table>
 
 ## Web page
 TODO
 
 ## API used
-~~空間數據共享平台: https://portal.csdi.gov.hk/csdi-webpage/info/dataquery?id=hyd_rcd_1629267205229_84645~~
-
-
-<details>
-    <summary><h2>Reference</h2></summary>
-
-    This project is a starting point for a Flutter application.
-
-    A few resources to get you started if this is your first Flutter project:
-
-    - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-    - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-    For help getting started with Flutter development, view the
-    [online documentation](https://docs.flutter.dev/), which offers tutorials,
-    samples, guidance on mobile development, and a full API reference.
-
-</details>
+### 空間數據共享平台: 
+[Lamppost](https://portal.csdi.gov.hk/csdi-webpage/info/dataquery?id=hyd_rcd_1629267205229_84645)  
+[Location Search](https://portal.csdi.gov.hk/csdi-webpage/apidoc/LocationSearchAPI)  
+[Identify](https://portal.csdi.gov.hk/csdi-webpage/apidoc/IdentifyAPI)
