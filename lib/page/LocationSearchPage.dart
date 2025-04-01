@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_hkgrid80_wgs84_converter/flutter_hkgrid80_wgs84_converter.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -33,7 +34,7 @@ class _LocationSearchTabState extends State<LocationSearchTab> with TickerProvid
             mapController: mapController,
             options: MapOptions(
               onTap: (_,__) => _popupController.hideAllPopups(),
-              onLongPress: (_, latlng) => openMapSheet(context, latlng),
+              onLongPress: (_, latlng) => (kIsWeb) ? launchURL('${latlng.latitude}, ${latlng.longitude}') : openMapSheet(context, latlng),
               initialCenter: const LatLng(22.3193, 114.1694),
             ),
             children: [
@@ -63,7 +64,7 @@ class _LocationSearchTabState extends State<LocationSearchTab> with TickerProvid
   Widget _buildSearchBar(context){
     final searchController = SearchController();
 
-    void _onTyped(String text) {
+    void onTyped(String text) {
       // open search view when typing in search bar
       if (!searchController.isOpen) {
         searchController.openView();
@@ -91,12 +92,12 @@ class _LocationSearchTabState extends State<LocationSearchTab> with TickerProvid
       padding: const EdgeInsets.all(16),
       child: SearchAnchor(
         searchController: searchController,
-        viewOnChanged: _onTyped,
+        viewOnChanged: onTyped,
         viewOnSubmitted: onSubmitted,
         builder: (context, controller) {
           return SearchBar(
             controller: controller,
-            onChanged: _onTyped,
+            onChanged: onTyped,
             onSubmitted: onSubmitted,
             padding: const WidgetStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16)),
             leading: const Icon(Icons.search),

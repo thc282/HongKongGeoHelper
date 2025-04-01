@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hong_kong_geo_helper/mics/LampSearchProvider.dart';
+import 'package:hong_kong_geo_helper/mics/LocationIdentifyProvider.dart';
 import 'package:hong_kong_geo_helper/mics/LocationSearchProvider.dart';
 import 'package:provider/provider.dart';
 
@@ -11,6 +12,7 @@ void main() => runApp(
     providers: [
       ChangeNotifierProvider(create: (_) => LampSearchProvider(),),
       ChangeNotifierProvider(create: (_) => LocationSearchProvider(),),
+      ChangeNotifierProvider(create: (_) => LocationIdentifyProvider(),),
     ],
     child: const MyApp(),
   )
@@ -43,16 +45,15 @@ class ScaffoldScreen extends StatefulWidget {
 }
 
 class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStateMixin {
-  PageConfigEnum _currentPage = PageConfigEnum.lamppost;
-  late TabController _tabController;
+  PageConfigEnum _currentPage = PageConfigEnum.home;
 
   @override
   void initState(){
     super.initState();
-    _tabController = TabController(
+    /*_tabController = TabController(
       length: _currentPage.tabs.length,
       vsync: this,
-    );
+    );*/
     // 使用 addPostFrameCallback 確保 context 已完全初始化
     /*WidgetsBinding.instance.addPostFrameCallback((_) {
       LampSearchProvider.of(context).updateTabController(_tabController);
@@ -61,18 +62,18 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStat
 
   @override
   void dispose(){
-    _tabController.dispose();
+    //_tabController.dispose();
     super.dispose();
   }
 
   void _onPageSelected(PageConfigEnum page){
     setState((){
       _currentPage = page;
-      _tabController.dispose();
+      /*_tabController.dispose();
       _tabController = TabController(
         length: _currentPage.tabs.length,
         vsync: this,
-      );
+      );*/
     });
   }
 
@@ -82,21 +83,22 @@ class _ScaffoldScreenState extends State<ScaffoldScreen> with TickerProviderStat
     return Scaffold(
       appBar: AppBar(
         title: Text(_currentPage.title),
-        actions: _buildAppBarActions(),
+        /*actions: _buildAppBarActions(),
         bottom: TabBar(
           controller: _tabController,
           tabs: _currentPage.tabs.map((tab) => Tab(text: tab)).toList(),
-        ),
+        ),*/
       ),
       drawer: AppDrawer(
         onPageSelected: _onPageSelected,
         currentPage: _currentPage,
       ),
-      body: TabBarView(
+      body: _currentPage.page,
+      /*body: TabBarView(
         controller: _tabController,
         children: [..._currentPage.page],
       ),
-      floatingActionButton: _buildFloatingActionButton(),
+      floatingActionButton: _buildFloatingActionButton(),*/
     );
   }
 

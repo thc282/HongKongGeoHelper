@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:hong_kong_geo_helper/mics/LocationSearchProvider.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 //Lamppost Search Page
 /*class MapPinLayer extends StatelessWidget {
@@ -74,9 +76,9 @@ class markerClusterLayer<T extends ChangeNotifier> extends StatelessWidget {
           maxZoom: 15,
           disableClusteringAtZoom: 17,
           markers: markersWithData.map((m) => m.marker).toList(),
-          onMarkerTap: (_onSelectedMarker) {
+          onMarkerTap: (onSelectedMarker) {
             onSelectedMarkerData = markersWithData
-                .firstWhere((m) => m.marker == _onSelectedMarker)
+                .firstWhere((m) => m.marker == onSelectedMarker)
                 .data;
           },
           builder: (context, markers) {
@@ -104,9 +106,11 @@ class markerClusterLayer<T extends ChangeNotifier> extends StatelessWidget {
               popupBuilder: (context, marker) {
                 switch (onSelectedMarkerData.runtimeType) {
                   case Properties:
-                    return _buildLamppostInfoCard(context, onSelectedMarkerData);
+                    return _buildLamppostInfoCard(context, onSelectedMarkerData, marker.point);
                   case LocationSearchInfo:
                     return _buildLandInfoCard(context, onSelectedMarkerData, marker.point);
+                  case IdentifyResultInfo:
+                    return _buildAddressInfoCard(context, onSelectedMarkerData, marker.point);
                   default:
                     return const Text('No data');
                 }
@@ -116,7 +120,7 @@ class markerClusterLayer<T extends ChangeNotifier> extends StatelessWidget {
     });
   }
 
-  Widget _buildLamppostInfoCard(context, Properties properties) {
+  Widget _buildLamppostInfoCard(context, Properties properties, LatLng point) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.8,
       decoration: BoxDecoration(
@@ -129,6 +133,7 @@ class markerClusterLayer<T extends ChangeNotifier> extends StatelessWidget {
           _buildCard('Longitude', properties.Longitude),
           _buildCard('District', properties.District),
           _buildCard('Location', properties.Location),
+          buildGoToMapButton(context, point),
         ],
       )
     );
@@ -151,6 +156,31 @@ class markerClusterLayer<T extends ChangeNotifier> extends StatelessWidget {
           _buildCard('District', properties.districtEN),
           const Divider(),
           _buildCard('座標', '${point.latitude}, ${point.longitude}'),
+          buildGoToMapButton(context, point),
+        ],
+      )
+    );
+  }
+
+  Widget _buildAddressInfoCard(context, IdentifyResultInfo resultInfo, LatLng point) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.8,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20), color: Colors.black54),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildCard('Information', resultInfo.eheader),
+          _buildCard('資訊', resultInfo.cheader),
+          const Divider(),
+          _buildCard('Address', resultInfo.addressInfo[0].eaddress),
+          _buildCard('Address Name', resultInfo.addressInfo[0].ename),
+          const Divider(),
+          _buildCard('地址', resultInfo.addressInfo[0].caddress),
+          _buildCard('地址名稱', resultInfo.addressInfo[0].cname),
+          const Divider(),
+          _buildCard('座標', '${point.latitude}, ${point.longitude}'),
+          buildGoToMapButton(context, point),
         ],
       )
     );
@@ -164,9 +194,41 @@ class markerClusterLayer<T extends ChangeNotifier> extends StatelessWidget {
       ),
     );
   }
+
+
 }
 
+Widget buildGoToMapButton(context, LatLng latlng) {
+  return ElevatedButton.icon(
+    onPressed: () => (kIsWeb) ? launchURL('${latlng.latitude}, ${latlng.longitude}') : openMapSheet(context, latlng),
+    icon: const Icon(Icons.map),
+    label: const Text('Open in Map'),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.blue,
+      foregroundColor: Colors.white,
+    ),
+  );
+}
 
+void launchURL(query, {type = 'google'}){
+  switch(type){
+    case 'google':
+      //https://maps.google.com/maps/search/?api=1&query=22.3193,114.1694
+      launchUrl(Uri.parse("https://www.google.com/maps/search/?api=1").replace(
+        queryParameters: {
+          'api': '1',
+          'query': query
+        },
+      )); //Google Map
+
+      break;
+    case 'apple':
+     
+      break;
+    default:
+      
+  }
+}
 
 //Open Map Bottom Sheet
 Future<dynamic> openMapSheet(context, LatLng latlng) async {
@@ -181,10 +243,13 @@ Future<dynamic> openMapSheet(context, LatLng latlng) async {
               children: <Widget>[
                 for (var map in availableMaps)
                   ListTile(
-                    onTap: () => map.showMarker(
-                      coords: Coords(latlng.latitude, latlng.longitude),
-                      title: map.mapName,
-                    ),
+                    onTap: () {
+                      map.showMarker(
+                        coords: Coords(latlng.latitude, latlng.longitude),
+                        title: map.mapName,
+                      );
+                      Navigator.of(context).pop();
+                    },
                     title: Text(map.mapName),
                     leading: SvgPicture.asset(
                       map.icon,

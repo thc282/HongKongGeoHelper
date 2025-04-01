@@ -1,19 +1,13 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:flutter_hkgrid80_wgs84_converter/flutter_hkgrid80_wgs84_converter.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hong_kong_geo_helper/assets/CustomIcon.dart';
-import 'package:hong_kong_geo_helper/assets/api2model.dart';
 import 'package:hong_kong_geo_helper/gadget/MarkerControl.dart';
 import 'package:hong_kong_geo_helper/gadget/mapMoveAnimation.dart';
 import 'package:hong_kong_geo_helper/mics/tile_provider.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:map_launcher/map_launcher.dart';
-import 'package:provider/provider.dart';
-import 'dart:convert';
 import 'package:hong_kong_geo_helper/assets/page_config.dart';
-import 'package:hong_kong_geo_helper/assets/API_config.dart';
 import 'package:hong_kong_geo_helper/mics/LampSearchProvider.dart';
 
 
@@ -72,7 +66,11 @@ class _LampSearchTabState extends State<LampSearchTab> with TickerProviderStateM
             mapController: mapController,
             options: MapOptions(
               onTap: (_,__) => _popupController.hideAllPopups(),
-              onLongPress: (_, latlng) => openMapSheet(context, latlng),
+              onLongPress: (_, latlng){
+                (kIsWeb) ? launchURL('${latlng.latitude}, ${latlng.longitude}') : openMapSheet(context, latlng);
+                //var a = Converter.convert.gridToLatLng(Coordinate(x:832591.320, y:820359.389));
+                
+              },
               initialCenter: const LatLng(22.3193, 114.1694),
             ),
             children: [
@@ -131,7 +129,7 @@ class _LampSearchTabState extends State<LampSearchTab> with TickerProviderStateM
         controller: _textController,
         onSubmitted: _onSubmitted,
         padding: const WidgetStatePropertyAll<EdgeInsets>(EdgeInsets.symmetric(horizontal: 16)),
-        leading: const Icon(Icons.search),
+        leading: const Icon(CustomIcon.lamp_street, size: 20.0,),
       ),
     );
   }

@@ -1,4 +1,3 @@
-import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:hong_kong_geo_helper/assets/CustomIcon.dart';
@@ -11,8 +10,7 @@ enum PageConfigEnum{
   home(
     title: 'Hong Kong Geo Helper',
     icon: Icons.home,
-    page: [HomePage()],
-    tabs: ['home'],
+    page: HomePage(),
     descriptions:
     {
       'main': 'Welcome to Hong Kong Geo Helper',
@@ -22,8 +20,7 @@ enum PageConfigEnum{
   lamppost(
     title: '路燈查詢',
     icon: CustomIcon.lamp_street,
-    page: [LampSearchTab()],
-    tabs: ['Search'],
+    page: LampSearchTab(),
     descriptions: 
     {
       'inputlabel': '輸入路燈編號',
@@ -36,8 +33,7 @@ enum PageConfigEnum{
   locationSearch(
     title: '地點查詢',
     icon: Icons.map,
-    page: [LocationSearchTab()],
-    tabs: [''],
+    page: LocationSearchTab(),
     descriptions: 
     {
       
@@ -46,8 +42,7 @@ enum PageConfigEnum{
   locationIdentify(
     title: '地點識別',
     icon: Icons.location_on,
-    page: [LocationIdentityTab()],
-    tabs: [''],
+    page: LocationIdentityTab(),
     descriptions: 
     {
       
@@ -59,14 +54,12 @@ enum PageConfigEnum{
     required this.title,
     required this.icon,
     required this.page,
-    required this.tabs,
     required this.descriptions,
   });
 
   final String title;
   final IconData icon;
-  final List<Widget> page;
-  final List<String> tabs;
+  final Widget page;
   final Map<String, String> descriptions;
 }
 

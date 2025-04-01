@@ -1,4 +1,3 @@
-import 'package:hong_kong_geo_helper/assets/api2model.dart';
 import 'package:http/http.dart' as http;
 
 enum ApiEndpoint {

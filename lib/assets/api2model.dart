@@ -177,9 +177,12 @@ class IdentifyResultInfo{
 
   // 為常用屬性提供getter
   List<IdentifyAddressInfo> get addressInfo => [..._data['addressInfo'].map((address) => IdentifyAddressInfo.fromJson(address))];
-  String get eheader => _data['eheader'];
-  String get type => _data['type'];
-  String get cheader => _data['cheader'];
+  String? get eheader => _data['eheader'];
+  String? get type => _data['type'];
+  String? get cheader => _data['cheader'];
+
+  @override
+  String toString() => _data.toString();
 }
 
 class IdentifyAddressInfo{
@@ -196,22 +199,27 @@ class IdentifyAddressInfo{
   bool hasKey(String key) => _data.containsKey(key);
 
   // 為常用屬性提供getter
-  String get eaddress => _data['eaddress'];
-  String get addressType => _data['addressType'];
-  String get cname => _data['cname'];
-  String get otherCname => _data['otherCname'];
-  double get roofLevel => _data['roofLevel'];
-  String get bdcsuid => _data['bdcsuid'];
-  String get ename => _data['ename'];
-  String get otherEname => _data['otherEname'];
-  double get x => _data['x'];
-  String get nameStatus => _data['nameStatus'];
-  double get y => _data['y'];
-  String get caddress => _data['caddress'];
+  String? get eaddress => _data['eaddress'];
+  String? get addressType => _data['addressType'];
+  String? get cname => _data['cname'];
+  String? get otherCname => _data['otherCname'];
+  double? get roofLevel => _data['roofLevel'];
+  String? get bdcsuid => _data['bdcsuid'];
+  String? get ename => _data['ename'];
+  String? get otherEname => _data['otherEname'];
+  double get x => (_data['x'] ?? 0 as num).toDouble();
+  String? get nameStatus => _data['nameStatus'];
+  double get y => (_data['y'] ?? 0 as num).toDouble();
+  String? get caddress => _data['caddress'];
   double get baseLevel => _data['baseLevel'];
-  List<IdentifyAddressInfo> get facility => [..._data['facility'].map((facility) => IdentifyAddressInfo.fromJson(facility))];
+  List<IdentifyResultInfo?> get facility => [...?_data['facility']?.map((f) => f != null ? IdentifyResultInfo.fromJson(f) : null)];
   String get uniqueId => _data['uniqueId'];
-  List<Hashtag> get hashtag => [..._data['hashtag'].map((hashtag) => Hashtag.fromJson(hashtag))];
+  List<Hashtag> get hashtag => [..._data['hashTag'].map((hashtag) => Hashtag.fromJson(hashtag))];
+  String get ltype => _data['LTYPE'];
+  String get lotName => _data['LOTNAME'];
+  String get lotId => _data['LOTID'];
+  String get prn => _data['PRN'];
+  String get lotFullName => _data['LOT_FULLNAME'];
 
   //inner addressInfo (extra)
   int get zoomLevel => _data['zoomLevel'];
@@ -220,12 +228,35 @@ class IdentifyAddressInfo{
   dynamic get eextrainfoArray => _data['eextrainfoArray'];
   dynamic get photos => _data['photos'];
   dynamic get einfo => _data['einfo'];
-  Map<String, String> get eextrainfo => _data['eextrainfo'];
+  Map<String, dynamic> get eextrainfo => _data['eextrainfo'];
   dynamic get group => _data['group'];
   String get faciType => _data['faciType'];
-  Map<String, String> get cextrainfo => _data['cextrainfo'];
+  Map<String, dynamic> get cextrainfo => _data['cextrainfo'];
   dynamic get cextrainfoArray => _data['cextrainfoArray'];
   dynamic get cinfo => _data['cinfo'];
+
+  @override
+  String toString() => _data.toString();
+}
+
+class Facility{
+  final Map<String, dynamic> _data;
+
+  Facility(this._data);
+
+  factory Facility.fromJson(Map<String, dynamic> json){
+    return Facility(json);
+  }
+
+  dynamic operator [](String key) => _data[key];
+
+  bool hasKey(String key) => _data.containsKey(key);
+
+  // 為常用屬性提供getter
+  List<IdentifyAddressInfo> get addressInfo => [..._data['addressInfo'].map((address) => IdentifyAddressInfo.fromJson(address))];
+
+  @override
+  String toString() => _data.toString();
 }
 
 class Hashtag{
@@ -247,4 +278,7 @@ class Hashtag{
   String get addressType => _data['addressType'];
   String get tagType => _data['tagType'];
   String get id => _data['id'];
+
+  @override
+  String toString() => _data.toString();
 }
