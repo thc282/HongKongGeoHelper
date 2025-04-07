@@ -123,8 +123,8 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: ef896d86fba3e97e19ef95f61cf63e1e477426e8
-      url: "https://github.com/lowkahonn/flutter_hkgrid80_wgs84_converter.git"
+      resolved-ref: ab90e44e556d44300895d6a9853dd20ca9b1ff89
+      url: "https://github.com/thc282/flutter_hkgrid80_wgs84_converter.git"
     source: git
     version: "0.0.1"
   flutter_lints:

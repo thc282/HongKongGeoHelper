@@ -63,7 +63,7 @@ class markerClusterLayer<T extends ChangeNotifier> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<MarkerWithData> markersWithData = [];
-    late dynamic onSelectedMarkerData;
+    dynamic onSelectedMarkerData;
 
     return Consumer<T>(builder: (context, provider, child) {
       markersWithData = markerBuilder(provider);
@@ -112,7 +112,8 @@ class markerClusterLayer<T extends ChangeNotifier> extends StatelessWidget {
                   case IdentifyResultInfo:
                     return _buildAddressInfoCard(context, onSelectedMarkerData, marker.point);
                   default:
-                    return const Text('No data');
+                    popupController.hideAllPopups();
+                    return Container(); // Handle other types or show a default message
                 }
               }),
         ),

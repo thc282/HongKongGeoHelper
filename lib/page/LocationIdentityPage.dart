@@ -40,42 +40,43 @@ class _LocationIdentityTabState extends State<LocationIdentityTab> {
               openStreetMapTileLayer,
               openStreetMapLabelTileLayer,
               markerClusterLayer(_popupController, locationIdentifyProvider,
-                  (provider) {
-                //do the data conversion here
-                var markerList = <MarkerWithData>[];
+                (provider) {
+                  //do the data conversion here
+                  var markerList = <MarkerWithData>[];
 
-                if (provider.identifyResult.results.isNotEmpty) {
-                  provider.identifyResult.results
+                  if (provider.identifyResult.results.isNotEmpty) {
+                    provider.identifyResult.results
                       .where((e) => e.addressInfo[0].x > 0.0)
                       .forEach((result) {
-                    final addressInfo = result.addressInfo[0];
-                    //outer addressInfo
-                    var latlng = Converter.convert.gridToLatLng(
-                        Coordinate(x: addressInfo.x, y: addressInfo.y));
-                    markerList.add(MarkerWithData(
-                        Marker(
-                            point: LatLng(latlng.lat, latlng.lng),
-                            child: const Icon(Icons.location_on,
-                                size: 20, color: Colors.red)),
-                        result));
-
-                    //inner addressInfo
-                    addressInfo.facility.forEach((f) {
-                      f?.addressInfo.forEach((innerAddress) {
-                        var latlng = Converter.convert.gridToLatLng(
-                            Coordinate(x: innerAddress.x, y: innerAddress.y));
+                        final addressInfo = result.addressInfo[0];
+                        //outer addressInfo
+                        var latlng = Converter.convert.gridToLatLng(Coordinate(x: addressInfo.x, y: addressInfo.y));
                         markerList.add(MarkerWithData(
-                            Marker(
-                                point: LatLng(latlng.lat, latlng.lng),
-                                child: const Icon(Icons.location_on,
-                                    size: 20, color: Colors.red)),
-                            f));
+                          Marker(
+                            point: LatLng(latlng.lat, latlng.lng),
+                            child: const Icon(Icons.location_on, size: 20, color: Colors.red)
+                          ),
+                          result
+                        ));
+
+                        //inner addressInfo
+                        addressInfo.facility.forEach((f) {
+                          f?.addressInfo.forEach((innerAddress) {
+                            var latlng = Converter.convert.gridToLatLng(Coordinate(x: innerAddress.x, y: innerAddress.y));
+                            markerList.add(MarkerWithData(
+                              Marker(
+                                  point: LatLng(latlng.lat, latlng.lng),
+                                  child: const Icon(Icons.location_on,
+                                      size: 20, color: Colors.red)),
+                              f
+                            ));
+                          });
+                        });
                       });
-                    });
-                  });
+                  }
+                  return markerList;
                 }
-                return markerList;
-              }),
+              ),
             ],
           ),
         ),
