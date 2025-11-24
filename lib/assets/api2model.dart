@@ -81,6 +81,7 @@ class Geometry{
   }
 }
 
+
 class Properties {
   final Map<String, dynamic> _data;
   
@@ -162,6 +163,10 @@ class LocationIdentifyInfo {
   String toString() => _data.toString();
 }
 
+/* ==============================================
+  * 以下為最優的API內部資料模型
+  * ==============================================
+  */
 class IdentifyResultInfo{
   final Map<String, dynamic> _data;
 
@@ -176,10 +181,10 @@ class IdentifyResultInfo{
   bool hasKey(String key) => _data.containsKey(key);
 
   // 為常用屬性提供getter
-  List<IdentifyAddressInfo> get addressInfo => [..._data['addressInfo'].map((address) => IdentifyAddressInfo.fromJson(address))];
-  String? get eheader => _data['eheader'];
-  String? get type => _data['type'];
-  String? get cheader => _data['cheader'];
+  List<IdentifyAddressInfo> get addressInfo => [...(_data['addressInfo'] as List<dynamic>?)?.map((address) => IdentifyAddressInfo.fromJson(address)) ?? []];
+  String? get eheader => _data['eheader'] ?? '';
+  String? get type => _data['type'] ?? '';
+  String? get cheader => _data['cheader'] ?? '';
 
   @override
   String toString() => _data.toString();
